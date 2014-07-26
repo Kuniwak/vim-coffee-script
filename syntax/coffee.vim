@@ -118,12 +118,32 @@ hi def link coffeeObjAssign Identifier
 syn keyword coffeeTodo TODO FIXME XXX contained
 hi def link coffeeTodo Todo
 
-syn match coffeeComment /#.*/ contains=@Spell,coffeeTodo
+syn match coffeeComment /#.*/ contains=@Spell,coffeeTodo,coffeeDocTag
 hi def link coffeeComment Comment
 
 syn region coffeeBlockComment start=/####\@!/ end=/###/
-\                             contains=@Spell,coffeeTodo
+\                             contains=@Spell,coffeeTodo,coffeeDocTag
 hi def link coffeeBlockComment coffeeComment
+
+syn match coffeeDocTag /@\w\+/ nextgroup=coffeeDocType skipwhite contained
+hi def link coffeeDocTag Statement
+
+syn region coffeeDocType matchgroup=coffeeDocTypeBrace start=/{/ end=/}/ nextgroup=coffeeDocVarName contains=coffeeDocTypeExprOperator,coffeeDocTypeExprRecordOperator,coffeeDocTypeName skipwhite contained
+hi def link coffeeDocType Normal
+hi def link coffeeDocTypeBrace Statement
+
+syn match coffeeDocVarName /\w\+\s/me=e-1 contained
+hi def link coffeeDocVarName Normal
+
+syn keyword coffeeDocTypeName function boolean number string undefined null contained
+hi def link coffeeDocTypeName Statement
+
+syn match coffeeDocTypeExprOperator /[|=\.,?!#:\*<>()]/ contained
+hi def link coffeeDocTypeExprOperator Statement
+
+syn region coffeeDocTypeExprRecordOperator matchgroup=coffeeDocTypeExprRecordOperatorBrace start=/{/ end=/}/ contains=coffeeDocTypeExprOperator,coffeeDocTypeExprRecordOperator,coffeeDocTypeName contained
+hi def link coffeeDocTypeExprRecordOperatorBrace Statement
+hi def link coffeeDocTypeExprRecordOperator Normal
 
 " A comment in a heregex
 syn region coffeeHeregexComment start=/#/ end=/\ze\/\/\/\|$/ contained
